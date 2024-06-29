@@ -32,15 +32,47 @@ function oldScrabbleScorer(word) {
 // your job is to finish writing these functions and variables that we've named //
 // don't change the names or your program won't work as expected. //
 
-function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
+function initialPrompt(prompt) {
+   wordEntered = input.question(prompt)
+   return console.log(oldScrabbleScorer(wordEntered));
 };
 
 let newPointStructure;
 
-let simpleScorer;
+let simpleScorer = function(word){
+   word = word.toUpperCase();
+   wordSimpleScore = word.length;
+   return wordSimpleScore;
+};
 
-let vowelBonusScorer;
+let vowelBonusScorer = function(word){
+   wordArray = word.toUpperCase().split("");
+   vowelBonusScore = 0;
+   for (i = 0; i < word.length; i++){
+      if (wordArray[i] === "A"){ 
+         vowelBonusScore += 3;
+      }
+      else if (wordArray[i] === "E"){ 
+         vowelBonusScore += 3;
+      }
+      else if (wordArray[i] === "I"){ 
+         vowelBonusScore += 3;
+      }
+      else if (wordArray[i] === "O"){ 
+         vowelBonusScore += 3;
+      }
+      else if (wordArray[i] === "U"){ 
+         vowelBonusScore += 3;
+      }
+      else {
+         vowelBonusScore += 1;
+      }
+   }
+   return vowelBonusScore;
+};
+
+
+console.log(vowelBonusScorer("rhythm"));
 
 let scrabbleScorer;
 
@@ -51,7 +83,7 @@ function scorerPrompt() {}
 function transform() {};
 
 function runProgram() {
-   initialPrompt();
+   initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
    
 }
 
