@@ -44,7 +44,7 @@ let newPointStructure = transform(oldPointStructure);
 function simpleScorer(str) {
    let word = String(str);
    word.toLowerCase();
-   wordSimpleScore = word.length;
+   let wordSimpleScore = word.length;
    return wordSimpleScore;
 }
 // console.log(simpleScorer("coconut"));
@@ -81,12 +81,14 @@ function vowelBonusScorer(str){
 
 function scrabbleScorer(str){
    let word = String(str);
-   word.toLowerCase();
+   let wordArray = word.toLowerCase().split("");
    let totalScore = 0;
-   for (i = 0; i < word.length; i++){
+   for (i = 0; i < wordArray.length; i++){
       for (item in newPointStructure){
-         letterPoints = newPointStructure[item];       //failing test of "scrabbleScorer uses transform() to score a word"
-         totalScore += letterPoints;
+         if (item.includes(wordArray[i])){
+            letterPoints = newPointStructure[item];
+            totalScore += letterPoints;
+         }
       }
    }
    return totalScore;
@@ -94,13 +96,13 @@ function scrabbleScorer(str){
 
 // Create objects which will be arrayed within scoringAlgorithms //
 
-let simpleScore = {name: "Simple Score", description: "Each letter is worth 1 point.", scorerFunction: simpleScorer()};
+let simpleScore = {name:"Simple Score", description:"Each letter is worth 1 point.", scorerFunction:simpleScorer};
 
-let vowelBonus = {name: "Bonus Vowels", description: "Vowels are 3 pts, consonants are 1 pt.", scorerFunction: vowelBonusScorer()};
+let vowelBonus = {name:"Bonus Vowels", description:"Vowels are 3 pts, consonants are 1 pt.", scorerFunction:vowelBonusScorer};
 
-let scrabble = {name: "Scrabble", description: "The traditional scoring algorithm.", scorerFunction: oldScrabbleScorer()};
+let scrabble = {name:"Scrabble", description:"The traditional scoring algorithm.", scorerFunction:scrabbleScorer};
 
-const scoringAlgorithms = [simpleScore.scorerFunction, vowelBonus.scorerFunction, scrabble.scorerFunction];
+let scoringAlgorithms = [simpleScore, vowelBonus, scrabble];   //failing test "scoringAlgorithms contain three scoring objects"
 
 
 // Finish writing scorerPrompt() so that the user can select which scoring algorithm to use 
@@ -116,11 +118,12 @@ function scorerPrompt(array, str) {
       console.log(`${i} - ${array[i].name}: ${array[i].description}`);
    }
    algSelection = input.question("Enter 0, 1, or 2: ");
-
-   return array[algSelection].scorerFunction(str);
+   for (i = 0; i < array.length; i++){
+      if (i === algSelection){
+         return array[i][scorerFunction(str)];
+      }  
+    }
 }
-
-// return algArray[i].name + ": " + algArray[i].description;
 
 // console.log(scorerPrompt(scoringAlgorithms));
 
@@ -135,7 +138,8 @@ function transform(obj) {
 
 function runProgram() {
    word1 = initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
-   return console.log(`Score for "${word1}": ${scorerPrompt(scoringAlgorithms, word1)}`);
+   wordScore = scorerPrompt(scoringAlgorithms, word1);
+   return console.log(`Score for "${word1}": ${wordScore}`);
 }
 
 // Don't write any code below this line //
