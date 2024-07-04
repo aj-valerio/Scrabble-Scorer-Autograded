@@ -12,8 +12,9 @@ const oldPointStructure = {
   10: ['Q', 'Z']
 };
 
-function oldScrabbleScorer(word) {
-	word = word.toUpperCase();
+function oldScrabbleScorer(str) {
+	let word = String(str);
+   word.toLowerCase();
 	let letterPoints = "";
  
 	for (let i = 0; i < word.length; i++) {
@@ -34,34 +35,38 @@ function oldScrabbleScorer(word) {
 
 function initialPrompt(prompt) {
    wordEntered = input.question(prompt)
-   return console.log(oldScrabbleScorer(wordEntered));
-};
+   return wordEntered;
+}
 
-let newPointStructure;
 
-let simpleScorer = function(word){
-   word = word.toUpperCase();
+let newPointStructure = transform(oldPointStructure);
+
+function simpleScorer(str) {
+   let word = String(str);
+   word.toLowerCase();
    wordSimpleScore = word.length;
    return wordSimpleScore;
-};
+}
+// console.log(simpleScorer("coconut"));
 
-let vowelBonusScorer = function(word){
-   wordArray = word.toUpperCase().split("");
+function vowelBonusScorer(str){
+   let word = String(str);
+   wordArray = word.toLowerCase().split("");
    vowelBonusScore = 0;
    for (i = 0; i < word.length; i++){
-      if (wordArray[i] === "A"){ 
+      if (wordArray[i] === "a"){ 
          vowelBonusScore += 3;
       }
-      else if (wordArray[i] === "E"){ 
+      else if (wordArray[i] === "e"){ 
          vowelBonusScore += 3;
       }
-      else if (wordArray[i] === "I"){ 
+      else if (wordArray[i] === "i"){ 
          vowelBonusScore += 3;
       }
-      else if (wordArray[i] === "O"){ 
+      else if (wordArray[i] === "o"){ 
          vowelBonusScore += 3;
       }
-      else if (wordArray[i] === "U"){ 
+      else if (wordArray[i] === "u"){ 
          vowelBonusScore += 3;
       }
       else {
@@ -69,22 +74,68 @@ let vowelBonusScorer = function(word){
       }
    }
    return vowelBonusScore;
-};
+}
 
 
-console.log(vowelBonusScorer("rhythm"));
+// console.log(vowelBonusScorer(""));
 
-let scrabbleScorer;
+function scrabbleScorer(str){
+   let word = String(str);
+   word.toLowerCase();
+   let totalScore = 0;
+   for (i = 0; i < word.length; i++){
+      for (item in newPointStructure){
+         letterPoints = newPointStructure[item];       //failing test of "scrabbleScorer uses transform() to score a word"
+         totalScore += letterPoints;
+      }
+   }
+   return totalScore;
+}
 
-const scoringAlgorithms = [];
+// Create objects which will be arrayed within scoringAlgorithms //
 
-function scorerPrompt() {}
+let simpleScore = {name: "Simple Score", description: "Each letter is worth 1 point.", scorerFunction: simpleScorer()};
 
-function transform() {};
+let vowelBonus = {name: "Bonus Vowels", description: "Vowels are 3 pts, consonants are 1 pt.", scorerFunction: vowelBonusScorer()};
+
+let scrabble = {name: "Scrabble", description: "The traditional scoring algorithm.", scorerFunction: oldScrabbleScorer()};
+
+const scoringAlgorithms = [simpleScore.scorerFunction, vowelBonus.scorerFunction, scrabble.scorerFunction];
+
+
+// Finish writing scorerPrompt() so that the user can select which scoring algorithm to use 
+// when the program scores their word. Use the selected algorithm to determine the score for the word:
+// If the user enters 0, have the program output a score using the simple scorer.
+// If the user enters 1, use the vowel bonus scoring function.
+// If the user enters 2, use the Scrabble scoring option.
+// scorerPrompt() should return the object the user has selected.
+
+function scorerPrompt(array, str) {
+   console.log("Which scoring algorithm would you like to use? ");
+   for (i = 0; i < array.length; i++){
+      console.log(`${i} - ${array[i].name}: ${array[i].description}`);
+   }
+   algSelection = input.question("Enter 0, 1, or 2: ");
+
+   return array[algSelection].scorerFunction(str);
+}
+
+// return algArray[i].name + ": " + algArray[i].description;
+
+// console.log(scorerPrompt(scoringAlgorithms));
+
+function transform(obj) {
+   let newObject = {};
+   for (key in obj){
+      for (i = 0; i < obj[key].length; i++)
+      newObject[obj[key][i].toLowerCase()] = Number(key);
+   }
+   return newObject;
+}
 
 function runProgram() {
-   initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
-   
+   word1 = initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
+   return console.log(`Score for "${word1}": ${scorerPrompt(scoringAlgorithms, word1)}`);
 }
 
 // Don't write any code below this line //
