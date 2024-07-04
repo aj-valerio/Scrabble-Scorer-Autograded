@@ -33,11 +33,12 @@ function oldScrabbleScorer(str) {
 // your job is to finish writing these functions and variables that we've named //
 // don't change the names or your program won't work as expected. //
 
+//Prompt user for a word
+
 function initialPrompt(prompt) {
    wordEntered = input.question(prompt)
    return wordEntered;
 }
-
 
 let newPointStructure = transform(oldPointStructure);
 
@@ -47,7 +48,6 @@ function simpleScorer(str) {
    let wordSimpleScore = word.length;
    return wordSimpleScore;
 }
-// console.log(simpleScorer("coconut"));
 
 function vowelBonusScorer(str){
    let word = String(str);
@@ -76,9 +76,7 @@ function vowelBonusScorer(str){
    return vowelBonusScore;
 }
 
-
-// console.log(vowelBonusScorer(""));
-
+// Uses newPointStructure to transform oldPointStructure and score string according to Scrabble point allocation //
 function scrabbleScorer(str){
    let word = String(str);
    let wordArray = word.toLowerCase().split("");
@@ -102,31 +100,26 @@ let vowelBonus = {name:"Bonus Vowels", description:"Vowels are 3 pts, consonants
 
 let scrabble = {name:"Scrabble", description:"The traditional scoring algorithm.", scorerFunction:scrabbleScorer};
 
-let scoringAlgorithms = [simpleScore, vowelBonus, scrabble];   //failing test "scoringAlgorithms contain three scoring objects"
+let scoringAlgorithms = [simpleScore, vowelBonus, scrabble];
 
 
-// Finish writing scorerPrompt() so that the user can select which scoring algorithm to use 
-// when the program scores their word. Use the selected algorithm to determine the score for the word:
-// If the user enters 0, have the program output a score using the simple scorer.
-// If the user enters 1, use the vowel bonus scoring function.
-// If the user enters 2, use the Scrabble scoring option.
+// Finish writing scorerPrompt() so that the user can select which scoring algorithm to use.
 // scorerPrompt() should return the object the user has selected.
 
-function scorerPrompt(array, str) {
+function scorerPrompt(array) {
    console.log("Which scoring algorithm would you like to use? ");
    for (i = 0; i < array.length; i++){
       console.log(`${i} - ${array[i].name}: ${array[i].description}`);
    }
    algSelection = input.question("Enter 0, 1, or 2: ");
    for (i = 0; i < array.length; i++){
-      if (i === algSelection){
-         return array[i][scorerFunction(str)];
+      if (i == algSelection){
+         return array[i].scorerFunction;
       }  
     }
 }
 
-// console.log(scorerPrompt(scoringAlgorithms));
-
+// When input is oldPointStructure, new object of output is newPointStructure. //
 function transform(obj) {
    let newObject = {};
    for (key in obj){
@@ -137,9 +130,10 @@ function transform(obj) {
 }
 
 function runProgram() {
-   word1 = initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
-   wordScore = scorerPrompt(scoringAlgorithms, word1);
-   return console.log(`Score for "${word1}": ${wordScore}`);
+   let word = initialPrompt("Let's play some scrabble!\n \nEnter a word: ");
+   algChoice = scorerPrompt(scoringAlgorithms);
+   let wordScore = algChoice(word);
+   return console.log(`Score for "${word}": ${wordScore}`);
 }
 
 // Don't write any code below this line //
