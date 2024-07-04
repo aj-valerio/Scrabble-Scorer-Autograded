@@ -53,20 +53,9 @@ function vowelBonusScorer(str){
    let word = String(str);
    wordArray = word.toLowerCase().split("");
    vowelBonusScore = 0;
+   let vowels = ["a","e","i","o","u"]
    for (i = 0; i < word.length; i++){
-      if (wordArray[i] === "a"){ 
-         vowelBonusScore += 3;
-      }
-      else if (wordArray[i] === "e"){ 
-         vowelBonusScore += 3;
-      }
-      else if (wordArray[i] === "i"){ 
-         vowelBonusScore += 3;
-      }
-      else if (wordArray[i] === "o"){ 
-         vowelBonusScore += 3;
-      }
-      else if (wordArray[i] === "u"){ 
+      if (vowels.includes(wordArray[i])){
          vowelBonusScore += 3;
       }
       else {
